@@ -1,4 +1,9 @@
-mmdet_base = "../../thirdparty/mmdetection/configs/_base_"
+# FIXME: this stupid relative path for mmdet_base assumes
+# a) this base.py lives at 
+#    ~/path/to/Bin-picking-pipeline/ext_deps/SoftTeacher/configs/soft_teacher/base.py
+# b) our custom mmdetection config files lives at
+#    ~/path/to/Bin-picking-pipeline/BinPicking/mmdetection/_base_/models/faster_rcnn_r50_fpn.py
+mmdet_base = "../../../../BinPicking/mmdetection/_base_"
 _base_ = [
     f"{mmdet_base}/models/faster_rcnn_r50_fpn.py",
     f"{mmdet_base}/datasets/coco_detection.py",
@@ -243,7 +248,7 @@ semi_wrapper = dict(
         use_teacher_proposal=False,
         pseudo_label_initial_score_thr=0.5,
         rpn_pseudo_threshold=0.9,
-        cls_pseudo_threshold=0.9,
+        cls_pseudo_threshold=0.7,
         reg_pseudo_threshold=0.02,
         jitter_times=10,
         jitter_scale=0.06,
@@ -258,11 +263,11 @@ custom_hooks = [
     dict(type="WeightSummary"),
     dict(type="MeanTeacher", momentum=0.999, interval=1, warm_up=0),
 ]
-evaluation = dict(type="SubModulesDistEvalHook", interval=4000)
-optimizer = dict(type="SGD", lr=0.01, momentum=0.9, weight_decay=0.0001)
+evaluation = dict(type="SubModulesDistEvalHook", interval=2000)
+optimizer = dict(type="SGD", lr=0.001, momentum=0.9, weight_decay=0.0001)
 lr_config = dict(step=[120000, 160000])
-runner = dict(_delete_=True, type="IterBasedRunner", max_iters=180000)
-checkpoint_config = dict(by_epoch=False, interval=4000, max_keep_ckpts=20)
+runner = dict(_delete_=True, type="IterBasedRunner", max_iters=1000000)
+checkpoint_config = dict(by_epoch=False, interval=2000)
 
 fp16 = dict(loss_scale="dynamic")
 
@@ -270,17 +275,6 @@ log_config = dict(
     interval=50,
     hooks=[
         dict(type="TextLoggerHook", by_epoch=False),
-        dict(
-            type="WandbLoggerHook",
-            init_kwargs=dict(
-                project="pre_release",
-                name="${cfg_name}",
-                config=dict(
-                    work_dirs="${work_dir}",
-                    total_step="${runner.max_iters}",
-                ),
-            ),
-            by_epoch=False,
-        ),
+
     ],
 )

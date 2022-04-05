@@ -14,12 +14,13 @@ from ssod.utils import patch_config
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument("img", help="Image file")
-    parser.add_argument("config", help="Config file")
-    parser.add_argument("checkpoint", help="Checkpoint file")
+    # /research/d3/bqyang/yidan/ycb_proj/datasets/ycb30/all/val/*
+    parser.add_argument("--img", default='', help="Image file")
+    parser.add_argument("--config", default='./configs/soft_teacher/soft_teacher_faster_rcnn_r50_caffe_fpn_coco_full_720k.py', help="Config file")
+    parser.add_argument("--checkpoint", default='./latest.pth', help="Checkpoint file")
     parser.add_argument("--device", default="cuda:0", help="Device used for inference")
     parser.add_argument(
-        "--score-thr", type=float, default=0.3, help="bbox score threshold"
+        "--score-thr", type=float, default=0.95, help="bbox score threshold"
     )
     parser.add_argument(
         "--async-test",
@@ -29,7 +30,7 @@ def parse_args():
     parser.add_argument(
         "--output",
         type=str,
-        default=None,
+        default='./visual',
         help="specify the directory to save visualization results.",
     )
     args = parser.parse_args()
@@ -45,6 +46,7 @@ def main(args):
     model = init_detector(cfg, args.checkpoint, device=args.device)
     imgs = glob.glob(args.img)
     for img in imgs:
+        if '.png' not in img: continue
         # test a single image
         result = inference_detector(model, img)
         # show the results
