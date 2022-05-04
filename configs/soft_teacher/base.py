@@ -1,9 +1,9 @@
 # FIXME: this stupid relative path for mmdet_base assumes
 # a) this base.py lives at 
-#    ~/path/to/Bin-picking-pipeline/ext_deps/SoftTeacher/configs/soft_teacher/base.py
+#    ~/path/to/Market-vision-pipeline/ext_deps/SoftTeacher/configs/soft_teacher/base.py
 # b) our custom mmdetection config files lives at
-#    ~/path/to/Bin-picking-pipeline/BinPicking/mmdetection/_base_/models/faster_rcnn_r50_fpn.py
-mmdet_base = "../../../../BinPicking/mmdetection/_base_"
+#    ~/path/to/Market-vision-pipeline/MarketVision/mmdetection/_base_/models/faster_rcnn_r50_fpn.py
+mmdet_base = "../../../../MarketVision/mmdetection/_base_"
 _base_ = [
     f"{mmdet_base}/models/faster_rcnn_r50_fpn.py",
     f"{mmdet_base}/datasets/coco_detection.py",
