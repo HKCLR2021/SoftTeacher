@@ -10,4 +10,4 @@ install:
 	python -m pip install -e .
 clean:
 	rm -rf thirdparty
-	rm -r ssod.egg-info
+	rm -rf ssod.egg-info
