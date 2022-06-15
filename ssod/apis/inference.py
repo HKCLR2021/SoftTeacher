@@ -40,7 +40,7 @@ def init_detector(config, checkpoint=None, device="cuda:0", cfg_options=None):
 
     model = build_detector(config.model, test_cfg=config.get("test_cfg"))
     if checkpoint is not None:
-        map_loc = "cpu" if device == "cpu" else None
+        map_loc = "cpu" if device == "cpu" else "cuda:0"
         checkpoint = load_checkpoint(model, checkpoint, map_location=map_loc)
         if "CLASSES" in checkpoint.get("meta", {}):
             model.CLASSES = checkpoint["meta"]["CLASSES"]
